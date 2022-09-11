@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Container } from "globalStyles";
 
@@ -26,11 +27,7 @@ export const StyledHome = styled(Container)`
     background-image: linear-gradient(to top right, #f86594, #ffcaa6);
   }
   & > :nth-child(7) {
-    background: linear-gradient(
-      45deg,
-      hsla(282, 36%, 25%, 1),
-      hsla(310, 22%, 37%, 1)
-    );
+    background-image: linear-gradient(to top right, #492957, #734a6c);
   }
 `;
 
@@ -43,6 +40,10 @@ export const GameContainer = styled.div`
   box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.25);
 `;
 
+export const ButtonContainer = styled.div`
+  width: 100%;
+`;
+
 export const Title = styled.h2`
   font-size: 2rem;
   font-weight: 600;
@@ -51,9 +52,7 @@ export const Title = styled.h2`
   max-width: min-content;
 `;
 
-export const InfoContainer = styled.div`
-  border-radius: 10px;
-  padding: 2rem;
-  position: absolute;
-  background: ${({ theme }) => theme.infoBackground};
+export const PlayLink = styled(Link)`
+  width: fit-content;
+  height: fit-content;
 `;

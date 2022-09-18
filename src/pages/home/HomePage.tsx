@@ -1,13 +1,13 @@
-import gamesInfo from "data/GameInfo.json";
 import { useState } from "react";
-import { FaPlay } from "react-icons/fa";
-import { BsInfoLg } from "react-icons/bs";
+import gamesInfo from "data/GameInfo.json";
 import {
   StyledHome,
   GameContainer,
   ButtonContainer,
   Title,
   PlayLink,
+  PlayButton,
+  InfoButton,
 } from "./HomePage.styled";
 
 function HomePage() {
@@ -25,10 +25,10 @@ function HomePage() {
 
           <ButtonContainer>
             <PlayLink to={game.linkTo}>
-              <FaPlay />
+              <PlayButton />
             </PlayLink>
 
-            <BsInfoLg onClick={handleClick} />
+            <InfoButton onClick={handleClick} />
           </ButtonContainer>
         </GameContainer>
       ))}

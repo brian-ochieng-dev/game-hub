@@ -1,8 +1,11 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import { Container } from "globalStyles";
+import { FaPlay } from "react-icons/fa";
+import { BsInfoLg } from "react-icons/bs";
 
 export const StyledHome = styled(Container)`
+  height: fit-content;
   padding: 6rem 3rem;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -55,4 +58,15 @@ export const Title = styled.h2`
 export const PlayLink = styled(Link)`
   width: fit-content;
   height: fit-content;
+`;
+
+export const PlayButton = styled(FaPlay)`
+  color: red;
+  font-size: 2rem;
+`;
+
+export const InfoButton = styled(BsInfoLg)`
+  color: red;
+  cursor: pointer;
+  font-size: 2rem;
 `;

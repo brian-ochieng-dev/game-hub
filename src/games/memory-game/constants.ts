@@ -7,7 +7,7 @@ import vue from "assets/vue-logo.png";
 import tailwind from "assets/tailwind-logo.png";
 import angular from "assets/angular-logo.png";
 
-const cardImg = [
+export const cardImg = [
   { src: html, matched: false },
   { src: sass, matched: false },
   { src: javascript, matched: false },
@@ -18,4 +18,6 @@ const cardImg = [
   { src: angular, matched: false },
 ];
 
-export default cardImg;
+export const result = {
+  gameOver: false,
+};

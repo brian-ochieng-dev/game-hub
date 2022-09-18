@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 import { v1 } from "uuid";
-import { Container } from "globalStyles";
 import SingleCard from "./Card";
-import cardImg from "./constants";
-import { Table } from "./MemoryGame.styled";
+import { cardImg } from "./constants";
+import {
+  Table,
+  TurnCounter,
+  MemoryGameContainer,
+  ResetButton,
+} from "./MemoryGame.styled";
 
 interface CardProps {
   src: string;
@@ -47,6 +51,7 @@ function MemoryGame() {
     setDisabled(false);
   };
 
+  // show cards on game start
   const showCards = () => {
     setCards((showCard) => {
       return showCard.map((card) => {
@@ -59,7 +64,13 @@ function MemoryGame() {
           return { ...card, matched: false };
         });
       });
-    }, 1000);
+    }, 1500);
+  };
+
+  // reset game
+  const resetGame = () => {
+    shuffleCards();
+    showCards();
   };
 
   // compare selected cards
@@ -91,7 +102,7 @@ function MemoryGame() {
   }, []);
 
   return (
-    <Container>
+    <MemoryGameContainer>
       <Table>
         {cards.map((card) => (
           <SingleCard
@@ -104,8 +115,9 @@ function MemoryGame() {
         ))}
       </Table>
 
-      <p>Turns: {turns}</p>
-    </Container>
+      <ResetButton onClick={resetGame}>Reset</ResetButton>
+      <TurnCounter>Turns: {turns}</TurnCounter>
+    </MemoryGameContainer>
   );
 }
 

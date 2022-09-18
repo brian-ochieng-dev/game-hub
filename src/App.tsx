@@ -14,7 +14,7 @@ import {
   QuizGame,
 } from "games";
 import NavBar from "components/nav-bar/NavBar";
-import { lightTheme, darkTheme } from "themes/Themes";
+import themes from "themes/Themes.json";
 
 const LINKS_TO = {
   homepage: "/",
@@ -32,7 +32,9 @@ function App() {
   const [theme, setTheme] = useState("light");
 
   return (
-    <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
+    <ThemeProvider
+      theme={theme === "light" ? themes.lightTheme : themes.darkTheme}
+    >
       <GlobalStyles />
       <BrowserRouter>
         <NavBar theme={theme} setTheme={setTheme} />

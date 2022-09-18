@@ -91,6 +91,12 @@ function MathGame() {
     }
   };
 
+  const handleKeyDown = (event: { key: string }) => {
+    if (event.key === "Enter") {
+      handleClick();
+    }
+  };
+
   useEffect(() => {
     setValid(false);
     addProblem();
@@ -129,8 +135,11 @@ function MathGame() {
             <Input
               value={userGuess}
               type="text"
-              onChange={(e) => handleInput(e)}
+              placeholder="..."
+              onChange={(event) => handleInput(event)}
+              onKeyDown={handleKeyDown}
             />
+
             <button type="submit" onClick={handleClick}>
               check
             </button>

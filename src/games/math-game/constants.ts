@@ -9,3 +9,7 @@ export const emptyGameData = {
 
 export const symbols = ["+", "-", "*", "/"];
 export const difficulty = { level: 0, maxNumber: 2 };
+
+export const result = {
+  state: "none",
+};

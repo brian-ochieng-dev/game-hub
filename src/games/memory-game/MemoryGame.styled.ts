@@ -1,9 +1,15 @@
 import styled from "styled-components";
+import { Container, Button } from "globalStyles";
+
+export const MemoryGameContainer = styled(Container)`
+  // will add theme later
+`;
 
 export const Table = styled.div`
   height: 500px;
   width: 500px;
   display: grid;
+  margin-top: 3rem;
   grid-template-columns: repeat(4, auto);
   gap: 0.5rem;
 `;
@@ -18,6 +24,7 @@ export const Card = styled.div`
     border: none;
     border-radius: 10px;
     background-color: transparent;
+    outline: none;
   }
 
   .front {
@@ -40,4 +47,17 @@ export const Card = styled.div`
       transition-delay: 0s;
     }
   }
+`;
+
+export const ResetButton = styled(Button)`
+  position: absolute;
+  right: 0;
+  bottom: 4rem;
+`;
+
+export const TurnCounter = styled.div`
+  margin: 3rem;
+  position: absolute;
+  right: 1em;
+  bottom: 0;
 `;

@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import GameOver from "components/game-over/GameOver";
 import { v1 as key } from "uuid";
 import { Container } from "globalStyles";
-import { Button, Cell, Heading, Table } from "./TicTacToe.styled";
-import Pattern from "./constants";
+import { Cell, Heading, Table } from "./TicTacToe.styled";
+import { Pattern, result } from "./constants";
 
 function TicTacToe() {
   const [board, setBoard] = useState<Array<string>>(Array(9).fill(""));
   const [player, setPlayer] = useState<string>("O");
-  const [result, setResult] = useState({ winner: "none", state: "none" });
+  const [results, setResults] = useState(result);
 
   const handleClick = (index: number) => {
     setBoard(
@@ -33,7 +33,7 @@ function TicTacToe() {
         }
       });
       if (foundWinningPattern) {
-        setResult({ winner: player, state: "won" });
+        setResults({ winner: player, state: "won" });
       }
     });
   };
@@ -46,14 +46,14 @@ function TicTacToe() {
       }
     });
     if (filled) {
-      setResult({ winner: "No one", state: "tie" });
+      setResults({ winner: "No one", state: "tie" });
     }
   };
 
   const restartGame = () => {
     setBoard(Array(9).fill(""));
     setPlayer(player === "X" ? "O" : "X");
-    setResult({ winner: "none", state: "none" });
+    setResults({ winner: "none", state: "none" });
   };
 
   useEffect(() => {
@@ -66,7 +66,7 @@ function TicTacToe() {
   return (
     <Container>
       <Table>
-        {result.state === "none" &&
+        {results.state === "none" &&
           board.map((value, index) => {
             return (
               <Cell key={key()} onClick={() => handleClick(index)}>
@@ -75,20 +75,11 @@ function TicTacToe() {
             );
           })}
 
-        {result.state === "won" && (
+        {results.state === "won" && (
           <Heading>Player {result.winner} Won!</Heading>
         )}
 
-        {result.state !== "none" && (
-          <>
-            <Button type="submit" onClick={restartGame}>
-              Restart
-            </Button>
-            <Link to="/">
-              <Button>Home</Button>
-            </Link>
-          </>
-        )}
+        {results.state !== "none" && <GameOver restartGame={restartGame} />}
       </Table>
     </Container>
   );

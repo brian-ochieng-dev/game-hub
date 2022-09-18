@@ -4,6 +4,7 @@ import cloneDeep from "lodash.clonedeep";
 import Swipe from "react-easy-swipe";
 import { v1 } from "uuid";
 import useEvent from "hooks/UseEvent";
+import GameOver from "components/game-over/GameOver";
 import Block from "./Cell";
 import {
   matrix,
@@ -12,19 +13,14 @@ import {
   DOWN_ARROW,
   LEFT_ARROW,
   RIGHT_ARROW,
+  result,
 } from "./constants";
 import { Container } from "../../globalStyles";
-import {
-  TwentyFortyEightContainer,
-  Header,
-  Button,
-  ButtonContainer,
-  Name,
-} from "./TwentyFortyEight.styled";
+import { TwentyFortyEightContainer } from "./TwentyFortyEight.styled";
 
 function TwentyFortyEight() {
   const [data, setData] = useState(matrix);
-  const [gameOver, setGameOver] = useState(false);
+  const [results, setResults] = useState(result);
 
   //  AddNumber - Add an item
   const addNumber = (newGrid) => {
@@ -50,7 +46,7 @@ function TwentyFortyEight() {
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
         const isGameOver = checkIfGameOver();
         if (isGameOver) {
-          setGameOver(true);
+          setResults(() => ({ ...results, gameOver: true }));
         }
       }
     }
@@ -271,7 +267,7 @@ function TwentyFortyEight() {
 
   //  Reset
   const resetGame = () => {
-    setGameOver(false);
+    setResults(() => ({ ...results, gameOver: false }));
     const emptyGrid = matrix;
 
     addNumber(emptyGrid);
@@ -280,7 +276,7 @@ function TwentyFortyEight() {
   };
 
   const handleKeyDown = (event) => {
-    if (gameOver) {
+    if (results.gameOver) {
       return;
     }
     switch (event.keyCode) {
@@ -302,7 +298,7 @@ function TwentyFortyEight() {
 
     const isGameOver = checkIfGameOver();
     if (isGameOver) {
-      setGameOver(true);
+      setResults(() => ({ ...results, gameOver: true }));
     }
   };
 
@@ -317,14 +313,7 @@ function TwentyFortyEight() {
   return (
     <Container>
       <TwentyFortyEightContainer>
-        <>
-          <Header>
-            <Name>2048</Name>
-            <ButtonContainer>
-              <Button onClick={resetGame}>New game</Button>
-            </ButtonContainer>
-          </Header>
-
+        {!results.gameOver ? (
           <Swipe
             onSwipeDown={swipeDown}
             onSwipeLeft={swipeLeft}
@@ -342,16 +331,8 @@ function TwentyFortyEight() {
               );
             })}
           </Swipe>
-        </>
-        {gameOver && (
-          <>
-            <div>Game Over</div>
-            <div>
-              <Button type="submit" onClick={resetGame}>
-                Try Again
-              </Button>
-            </div>
-          </>
+        ) : (
+          <GameOver resetGame={resetGame} />
         )}
       </TwentyFortyEightContainer>
     </Container>

@@ -6,7 +6,10 @@ export const MathGameContainer = styled(Container)`
   align-items: center;
   justify-content: center;
 `;
-
+export const ProblemContainer = styled.div`
+  display: Flex;
+  margin: 2rem;
+`;
 export const NumContainer = styled.div`
   font-size: 3rem;
   padding: 1rem;

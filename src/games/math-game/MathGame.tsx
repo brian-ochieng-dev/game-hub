@@ -1,11 +1,13 @@
 import { useState, useEffect, ChangeEvent } from "react";
+import GameOver from "components/game-over/GameOver";
 import {
   MathGameContainer,
+  ProblemContainer,
   NumContainer,
   SymbolContainer,
   Input,
 } from "./MathGame.styled";
-import { emptyGameData, symbols, difficulty } from "./constants";
+import { emptyGameData, symbols, gameDifficulty, result } from "./constants";
 
 interface GameDataTypes {
   number1: string;
@@ -16,32 +18,47 @@ interface GameDataTypes {
   answer: number;
 }
 
+/*
+ fixme: fix game level switching
+ fixme: restart button
+ fixme: numbers are not increasing
+ fixme: symbols are not changing as they should
+ todo: only show problems with integer answers
+*/
+
 function MathGame() {
-  const [gameData, setGameData] = useState<GameDataTypes>(emptyGameData);
-  const [gameDifficulty, setGameDifficulty] = useState(difficulty);
+  const [data, setData] = useState<GameDataTypes>(emptyGameData);
+  const [difficulty, setDifficulty] = useState(gameDifficulty);
   const [userGuess, setUserGuess] = useState("");
   const [count, setCount] = useState(1);
-  const [gameOver, setGameOver] = useState(false);
-  const [valid, setValid] = useState(false);
+  const [results, setResults] = useState(result);
 
   const randInt = (limit: number) => {
     return Math.floor(Math.random() * limit);
   };
 
   const addProblem = () => {
-    return setGameData(() => ({
-      ...gameData,
+    let easy = true;
+
+    if (count >= difficulty.level.easy) {
+      easy = false;
+    }
+
+    return setData(() => ({
+      ...data,
       // set numbers
       number1: String(randInt(gameDifficulty.maxNumber) + 1),
       number2: String(randInt(gameDifficulty.maxNumber) + 1),
-      number3:
-        difficulty.level > 2
-          ? String(randInt(gameDifficulty.maxNumber) + 1)
-          : "",
+      number3: !easy ? String(randInt(gameDifficulty.maxNumber) + 1) : "",
       // set symbols
-      symbol1: symbols[randInt(gameDifficulty.level >= 2 ? 4 : 2)],
-      symbol2: gameDifficulty.level > 2 ? symbols[randInt(4)] : "",
+      symbol1: symbols[randInt(!easy ? 4 : 2)],
+      symbol2: !easy ? symbols[randInt(4)] : "",
     }));
+  };
+
+  const restartGame = () => {
+    setData(emptyGameData);
+    setDifficulty(gameDifficulty);
   };
 
   const symbolConverter = (symbol: string) => {
@@ -55,11 +72,11 @@ function MathGame() {
   };
 
   const calculation = () => {
-    setGameData((p) => ({
-      ...p,
+    setData((dt) => ({
+      ...dt,
       // eslint-disable-next-line no-eval
       answer: eval(
-        `${p.number1}${p.symbol1}${p.number2}${p.symbol2}${p.number3}`,
+        `${dt.number1}${dt.symbol1}${dt.number2}${dt.symbol2}${dt.number3}`,
       ),
     }));
   };
@@ -69,75 +86,72 @@ function MathGame() {
   };
 
   const checkIfGameOver = () => {
-    if (Number(userGuess) !== gameData.answer) {
-      setGameOver(true);
+    if (Number(userGuess) !== data.answer) {
+      setResults(() => ({
+        ...results,
+        gameOver: true,
+      }));
     } else {
       setCount(count + 1);
     }
   };
 
+  // eslint-disable-next-line consistent-return
   const handleClick = () => {
     checkIfGameOver();
     setUserGuess("");
 
     // change difficulty of the game
-    if (count <= 5 && gameDifficulty.maxNumber < 100) {
-      setGameDifficulty((p) => ({ ...p, maxNumber: p.maxNumber * 1.1 }));
-    } else if (count > 5 && gameDifficulty.maxNumber < 500) {
-      setGameDifficulty((p) => ({ ...p, maxNumber: p.maxNumber * 1.2 }));
+    if (count <= difficulty.level.easy / 2) {
+      return setDifficulty(() => ({
+        ...difficulty,
+        maxNumber: 64,
+      }));
     }
-    if (count > 8) {
-      setGameDifficulty((p) => ({ ...p, level: p.level + 1 }));
+    if (count <= difficulty.level.medium) {
+      return setDifficulty(() => ({
+        ...difficulty,
+        maxNumber: 256,
+      }));
     }
-  };
-
-  const handleKeyDown = (event: { key: string }) => {
-    if (event.key === "Enter") {
-      handleClick();
+    if (count <= difficulty.level.hard) {
+      return setDifficulty(() => ({
+        ...difficulty,
+        maxNumber: 1024,
+      }));
     }
   };
 
   useEffect(() => {
-    setValid(false);
     addProblem();
     calculation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count]);
 
-  useEffect(() => {
-    if (Number.isInteger(gameData.answer)) {
-      setValid(true);
-    } else {
-      addProblem();
-      calculation();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameData.answer]);
-
   return (
     <MathGameContainer>
-      {!gameOver && (
+      {!results.gameOver ? (
         <>
-          {valid && (
-            <>
-              <NumContainer>{gameData.number1}</NumContainer>
-              <SymbolContainer>
-                {symbolConverter(gameData.symbol1)}
-              </SymbolContainer>
-              <NumContainer>{gameData.number2}</NumContainer>
-              <SymbolContainer>
-                {symbolConverter(gameData.symbol2)}
-              </SymbolContainer>
-              <NumContainer>{gameData.number3}</NumContainer>
-            </>
-          )}
+          <ProblemContainer>
+            <NumContainer>{data.number1}</NumContainer>
+            <SymbolContainer>{symbolConverter(data.symbol1)}</SymbolContainer>
+            <NumContainer>{data.number2}</NumContainer>
+            {count >= difficulty.level.easy && (
+              <>
+                <SymbolContainer>
+                  {symbolConverter(data.symbol2)}
+                </SymbolContainer>
+                <NumContainer>{data.number3}</NumContainer>
+              </>
+            )}
+          </ProblemContainer>
+
           <>
             <Input
               value={userGuess}
               type="text"
               placeholder="..."
               onChange={(event) => handleInput(event)}
-              onKeyDown={handleKeyDown}
             />
 
             <button type="submit" onClick={handleClick}>
@@ -145,11 +159,9 @@ function MathGame() {
             </button>
           </>
         </>
+      ) : (
+        <GameOver restartGame={() => restartGame()} />
       )}
-      <>
-        <NumContainer>{gameData.answer}</NumContainer>
-        <NumContainer>{userGuess}</NumContainer>
-      </>
     </MathGameContainer>
   );
 }

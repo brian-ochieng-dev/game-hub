@@ -1,3 +1,4 @@
+export const symbols = ["+", "-", "*", "/"];
 export const emptyGameData = {
   number1: "",
   number2: "",
@@ -6,10 +7,14 @@ export const emptyGameData = {
   symbol2: "",
   answer: 0,
 };
-
-export const symbols = ["+", "-", "*", "/"];
-export const difficulty = { level: 0, maxNumber: 2 };
-
+export const gameDifficulty = {
+  level: {
+    easy: 10,
+    medium: 20,
+    hard: 30,
+  },
+  maxNumber: 16,
+};
 export const result = {
-  state: "none",
+  gameOver: false,
 };

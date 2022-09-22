@@ -20,7 +20,7 @@ function HomePage() {
   return (
     <StyledHome>
       {gamesInfo.map((game) => (
-        <GameContainer>
+        <GameContainer key={game.id}>
           <Title>{game.name}</Title>
 
           <ButtonContainer>

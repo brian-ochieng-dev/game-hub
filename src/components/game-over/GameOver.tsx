@@ -2,15 +2,16 @@ import { Link } from "react-router-dom";
 import { Button } from "globalStyles";
 import { GameOverModal, StyledGameOver, Header } from "./GameOver.styled";
 
-function GameOver({ restartGame }: { restartGame: Function }) {
+interface Proptypes {
+  restartGame: Function;
+}
+
+function GameOver({ restartGame }: Proptypes) {
   return (
     <GameOverModal>
       <StyledGameOver>
         <Header>Game Over</Header>
-        <Button
-          type="submit"
-          onClick={() => (restartGame() ? restartGame() : null)}
-        >
+        <Button type="submit" onClick={() => restartGame()}>
           Restart
         </Button>
         <Link to="/">
